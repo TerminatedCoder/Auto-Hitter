@@ -2,7 +2,7 @@
 
 # 🚀 BINARY OS 
 
-**The Ultimate Decentralized Payment Testing & Automation Extension**
+**The Ultimate Decentralized Payment Testing & Automation Extension For "checkout.stripe.com" **
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-3.0%20(Open%20Source)-blue.svg)](https://github.com/TerminatedCoder/Binary-OS)
