@@ -2,10 +2,7 @@
 
 # 🚀 BINARY OS 
 
-**The Ultimate Decentralized Payment Testing & Automation Extension For **
-<p align="center>
-  This extension is "only for checkout.stipe.com"
-</p>
+**The Ultimate Decentralized Payment Testing & Automation Extension**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-3.0%20(Open%20Source)-blue.svg)](https://github.com/TerminatedCoder/Binary-OS)
@@ -13,7 +10,7 @@
 [![Developer](https://img.shields.io/badge/Developer-TerminatedCoder-red.svg)](https://github.com/TerminatedCoder)
 
 <p align="center">
-  Binary OS is an open-source, fully unlocked Chrome extension designed for automated penetration testing and load-testing of payment gateways. It features a completely local, decentralized architecture with built-in proxy management, a unified target database, and optional private Telegram integration.
+  <b>Binary OS</b> is the ultimate open-source <b>checkout autohitter</b> and <b>auto co</b> Chrome extension designed for automated penetration testing. Whether you need a reliable <b>payment gateway tester</b>, a smart BIN/CC auto-filler, or a high-speed <b>auto checkout</b> tool, Binary OS delivers. It features a completely local, decentralized architecture with a built-in live proxy checker, a unified target database for smart Round-Robin routing, and optional private Telegram hit forwarding.
 </p>
 
 ---
@@ -21,7 +18,12 @@
 </div>
 
 ## ⚠️ Disclaimer
-> **For Educational and Authorized Testing Purposes Only.** > This tool is designed for developers, penetration testers, and security researchers to test their own systems or systems they have explicit permission to test. The developers assume no liability and are not responsible for any misuse or damage caused by this program.
+> **For Educational and Authorized Testing Purposes Only.** This tool is designed for developers, penetration testers, and security researchers to test their own systems or systems they have explicit permission to test. The developers assume no liability and are not responsible for any misuse or damage caused by this program.
+
+---
+
+## 🎯 Target Compatibility
+> **Important Note:** The current version of this extension's DOM selectors and API interceptors are heavily optimized and hardcoded to operate **exclusively on `checkout.stripe.com`** and Stripe-hosted payment pages. It will not automatically trigger or autofill on custom-built forms or other payment gateways (like PayPal, Braintree, etc.) without modifying the source code.
 
 ---
 
@@ -46,7 +48,7 @@ A built-in network engine that natively tests your proxy list directly through C
 * **Instant Purge:** Pings IPs with a strict 5-second timeout and immediately deletes dead proxies from your list, saving only the live ones.
 
 ### 🤖 Auto-Hitter & Silent Operations
-* **Automated Injection:** Automatically detects payment gateways (like Stripe), fills forms, bypasses captchas/bloatware, and submits the transaction.
+* **Automated Injection:** Automatically detects Stripe gateways, fills forms, bypasses captchas/bloatware, and submits the transaction.
 * **Scamalytics Bypass:** Built-in protection against Scamalytics API rate limits and HTML crashes.
 * **Silent Declines:** Massive red error boxes are gone. Declines fail silently in the background, showing only a sleek, tiny 3-second popup with the exact technical `code` and `decline_code`.
 
