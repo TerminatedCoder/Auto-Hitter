@@ -6,6 +6,7 @@
 <p align="center>
   This extension is "only for checkout.stipe.com"
 </p>
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/Version-3.0%20(Open%20Source)-blue.svg)](https://github.com/TerminatedCoder/Binary-OS)
 [![Platform](https://img.shields.io/badge/Platform-Chrome%20Extension-4285F4.svg?logo=googlechrome&logoColor=white)](https://github.com/TerminatedCoder/Binary-OS)
