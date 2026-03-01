@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Binary OS - Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* =========================================
+       BROWSER.LOL / PREMIUM SAAS THEME
+       ========================================= */
+      :root {
+        --bg-base: #09090b; /* zinc-950 */
+        --bg-surface: #18181b; /* zinc-900 */
+        --border-color: rgba(255, 255, 255, 0.1);
+        --border-light: rgba(255, 255, 255, 0.05);
+
+        --primary: #fafafa;
+        --primary-hover: #e4e4e7;
+        --accent: #6366f1; /* Indigo */
+
+        --text-main: #fafafa;
+        --text-dim: #a1a1aa; /* zinc-400 */
+
+        --success: #10b981; /* emerald-500 */
+        --danger: #ef4444; /* red-500 */
+
+        --font-main:
+          "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        --font-mono: "JetBrains Mono", "Courier New", monospace;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: var(--font-main);
+        background-color: var(--bg-base);
+        color: var(--text-main);
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+      a:hover { color: #818cf8; }
+
+      /* =========================================
+       FULLSCREEN AUTH PANEL (OTP SYSTEM)
+       ========================================= */
+      #telegram-login-view {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: var(--bg-base); z-index: 9999; overflow-y: auto;
+      }
+      .auth-container {
+        min-height: 100vh; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; padding: 24px;
+      }
+      .auth-card {
+        width: 100%; max-width: 400px; background: var(--bg-surface);
+        border: 1px solid var(--border-color); border-radius: 12px;
+        padding: 32px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+      }
+      .auth-logo {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 48px; height: 48px; border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color);
+        font-size: 20px; color: var(--text-main); margin-bottom: 24px;
+      }
+      .auth-header { margin-bottom: 24px; }
+      .auth-header h1 { font-size: 20px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.02em; }
+      .auth-header p { font-size: 14px; color: var(--text-dim); line-height: 1.5; }
+      .auth-steps {
+        background: rgba(255, 255, 255, 0.02); border: 1px dashed var(--border-color);
+        border-radius: 8px; padding: 16px; font-size: 12px;
+        color: var(--text-dim); margin-bottom: 24px; line-height: 1.8;
+      }
+      .auth-steps b { color: var(--text-main); font-weight: 500; }
+      .otp-row { display: flex; gap: 8px; }
+      .otp-row input { flex: 1; letter-spacing: 2px; font-family: var(--font-mono); text-align: center; }
+
+      /* =========================================
+       SIDEBAR NAVIGATION & LARGE PROFILE CARD
+       ========================================= */
+      .nav-container {
+        width: 280px; flex-shrink: 0; background: var(--bg-base);
+        border-right: 1px solid var(--border-color); z-index: 50; overflow-y: auto;
+      }
+      .capsule-nav { display: flex; flex-direction: column; min-height: 100%; padding: 24px 16px; }
+
+      #telegram-profile-view {
+        flex-direction: column; align-items: center; text-align: center; gap: 12px;
+        padding: 24px 16px; margin-bottom: 32px; border-radius: 12px;
+        background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color);
+      }
+      .user-card-avatar {
+        width: 84px; height: 84px; border-radius: 50%; overflow: hidden;
+        border: 2px solid var(--border-color); flex-shrink: 0;
+      }
+      .profile-avatar { width: 100%; height: 100%; object-fit: cover; }
+      .user-card-info { display: flex; flex-direction: column; gap: 4px; }
+      .user-card-name { font-size: 16px; font-weight: 600; color: var(--text-main); margin: 0; }
+      .user-card-username { font-size: 13px; color: var(--text-dim); margin: 0; }
+      .user-card-badge {
+        display: inline-block; background: rgba(16, 185, 129, 0.1);
+        color: var(--success); padding: 4px 12px; border-radius: 9999px;
+        font-size: 11px; font-weight: 600; border: 1px solid rgba(16, 185, 129, 0.2); margin-top: 4px;
+      }
+
+      .btn-connect { margin-top: 12px; width: 100%; background: #3b82f6; color: white; }
+      .btn-connect:hover { background: #2563eb; }
+      .btn-unlink-action {
+        background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2);
+        color: var(--danger); border-radius: 6px; padding: 8px; width: 100%;
+        margin-top: 8px; font-size: 12px; font-weight: 500; cursor: pointer; transition: 0.2s;
+      }
+      .btn-unlink-action:hover { background: rgba(239, 68, 68, 0.1); }
+
+      .nav-links { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+      .nav-item {
+        display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+        border-radius: 8px; font-size: 14px; font-weight: 500;
+        color: var(--text-dim); cursor: pointer; transition: all 0.2s ease;
+      }
+      .nav-item:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
+      .nav-item.active { color: var(--text-main); background: var(--bg-surface); border: 1px solid var(--border-color); }
+      .nav-item.active i { color: var(--text-main); }
+
+      .nav-status {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 20px 12px 0 12px; margin-top: auto; border-top: 1px solid var(--border-light);
+      }
+      .matrix-badge { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; color: var(--text-dim); }
+      .matrix-badge.ready { color: var(--success); }
+      .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 8px var(--success); }
+      .power-btn { display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-dim); cursor: pointer; transition: 0.2s; }
+      .power-btn:hover { color: var(--danger); }
+
+      /* =========================================
+       MAIN INTERFACE & DASHBOARD STATS
+       ========================================= */
+      .main-view { flex: 1; height: 100vh; overflow-y: auto; padding: 48px; position: relative; }
+      .view-content-wrapper { max-width: 900px; margin: 0 auto; }
+      .view-header { margin-bottom: 40px; }
+      .view-header h1 { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; color: var(--text-main); margin-bottom: 6px; }
+      .view-subtitle { color: var(--text-dim); font-size: 14px; }
+
+      .section { display: none; animation: fadeIn 0.2s ease forwards; }
+      .section.active { display: block; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+      .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 24px; }
+      .stat-box { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 16px; }
+      .stat-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-main); flex-shrink: 0; }
+      .stat-info { display: flex; flex-direction: column; gap: 4px; }
+      .stat-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+      .stat-value { font-size: 18px; font-weight: 700; color: var(--text-main); }
+      .stat-value.success-text { color: var(--success) !important; font-size: 24px; }
+
+      .glass-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+      .panel-tall { height: 400px; overflow-y: auto; }
+      .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-light); }
+      .card-title { font-size: 15px; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 8px; margin: 0; }
+      .card-title i { color: var(--text-dim); font-size: 14px; }
+
+      .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px; }
+      .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+      .form-label { font-size: 13px; font-weight: 500; color: var(--text-main); }
+      .form-input, .form-textarea, .clean-select { width: 100%; background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 12px; color: var(--text-main); font-family: var(--font-main); font-size: 14px; transition: all 0.2s; outline: none; }
+      .form-input:focus, .form-textarea:focus, .clean-select:focus { border-color: var(--text-dim); }
+      .form-textarea { resize: vertical; min-height: 100px; font-family: var(--font-mono); font-size: 13px; line-height: 1.5; }
+
+      .btn { padding: 10px 16px; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; font-family: var(--font-main); }
+      .btn-primary { background: var(--primary); color: var(--bg-base); }
+      .btn-primary:hover { background: var(--primary-hover); }
+      .btn-secondary { background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-color); }
+      .btn-secondary:hover { background: rgba(255, 255, 255, 0.05); }
+
+      .toggle-switch { position: relative; width: 36px; height: 20px; display: inline-block; flex-shrink: 0; }
+      .toggle-switch input { opacity: 0; width: 0; height: 0; }
+      .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: var(--border-color); border-radius: 34px; transition: 0.2s; }
+      .toggle-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background: var(--text-dim); border-radius: 50%; transition: 0.2s; }
+      input:checked + .toggle-slider { background: var(--primary); border-color: var(--primary); }
+      input:checked + .toggle-slider:before { transform: translateX(16px); background: var(--bg-base); }
+
+      #consoleOutput { background: var(--bg-base); border-radius: 8px; padding: 16px; border: 1px solid var(--border-color); font-family: var(--font-mono); }
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+      /* =========================================
+       MOBILE RESPONSIVENESS (OFF-CANVAS SIDEBAR)
+       ========================================= */
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.6); backdrop-filter: blur(3px);
+        z-index: 40; opacity: 0; transition: opacity 0.3s ease;
+      }
+
+      @media (min-width: 769px) {
+        .mobile-menu-btn { display: none; }
+      }
+
+      @media (max-width: 768px) {
+        body { flex-direction: column; }
+        
+        .sidebar-overlay { display: block; pointer-events: none; }
+        .sidebar-overlay.active { pointer-events: auto; opacity: 1; }
+
+        .nav-container {
+          position: fixed; top: 0; left: 0; bottom: 0; height: 100vh;
+          width: 280px; z-index: 50; transform: translateX(-100%);
+          transition: transform 0.3s ease; border-right: 1px solid var(--border-color);
+        }
+        .nav-container.open { transform: translateX(0); }
+
+        .main-view { padding: 24px 16px; }
+
+        .view-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+        .view-header h1 { font-size: 22px; margin: 0; }
+        .view-subtitle { display: none; }
+
+        .mobile-menu-btn {
+          display: block; background: transparent; border: none;
+          color: var(--text-main); font-size: 24px; cursor: pointer; padding: 4px;
+        }
+
+        .glass-card { padding: 16px; border-radius: 10px; }
+        .card-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+        .card-header .btn { width: 100%; }
+        .form-grid { grid-template-columns: 1fr !important; gap: 12px; }
+        .panel-tall { height: 300px !important; }
+
+        .auth-container { padding: 16px; }
+        .auth-card { padding: 24px; }
+        .auth-header h1 { font-size: 18px; }
+        .auth-steps { font-size: 11px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div id="telegram-login-view" style="display: none">
+      <div class="auth-container">
+        <div class="auth-card">
+          <div class="auth-logo"><i class="fas fa-bolt"></i></div>
+          <div class="auth-header">
+            <h1>Connect Telegram</h1>
+            <p>Enter your bot details to securely link your device and unlock the dashboard.</p>
+          </div>
+          <div class="auth-steps">
+            1. Open <a href="https://t.me/BinaryHitSenderBot" target="_blank">@BinaryBot</a> & send <b>/start</b><br />
+            2. Copy your ID from <a href="https://t.me/userinfobot" target="_blank">@userinfobot</a><br />
+            3. Generate a Token with <a href="https://t.me/BotFather" target="_blank">@BotFather</a>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telegram User ID</label>
+            <input type="text" class="form-input" id="telegramId" placeholder="e.g. 123456789" autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bot Token</label>
+            <input type="password" class="form-input" id="botToken" placeholder="123456:ABC-def..." autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">OTP Code</label>
+            <div class="otp-row">
+              <input type="text" class="form-input" id="otpCode" placeholder="000000" autocomplete="off" inputmode="numeric" maxlength="6" />
+              <button type="button" class="btn btn-secondary" id="sendOtpBtn">Send Code</button>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary" id="verifyOtpBtn" style="width: 100%; margin-top: 16px; padding: 12px">
+            Verify Device
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="nav-container" id="mobileSidebar">
+      <div class="capsule-nav">
+        
+        <div id="telegram-profile-view" style="display: flex;">
+          <div class="user-card-avatar">
+            <img id="tg-avatar" src="" alt="" class="profile-avatar" />
+          </div>
+          <div class="user-card-info">
+            <h2 id="tg-name" class="user-card-name">Guest User</h2>
+            <p id="tg-username" class="user-card-username">Local Mode</p>
+            <span class="user-card-badge" id="tg-badge">Not Linked</span>
+          </div>
+          
+          <button id="manualLoginBtn" class="btn btn-primary btn-connect">
+              <i class="fab fa-telegram"></i> Connect Telegram
+          </button>
+          
+          <button class="btn-unlink-action" style="display: none;">Unlink Account</button>
+        </div>
+        
+        <div class="nav-links">
+          <div class="nav-item active" data-section="telegram">
+            <i class="fas fa-home"></i><span>Overview</span>
+          </div>
+          <div class="nav-item" data-section="settings">
+            <i class="fas fa-cog"></i><span>Settings</span>
+          </div>
+          <div class="nav-item" data-section="cards">
+            <i class="fas fa-database"></i><span>Database</span>
+          </div>
+          <div class="nav-item" data-section="userDetails">
+            <i class="fas fa-fingerprint"></i><span>Identity</span>
+          </div>
+          <div class="nav-item" data-section="console">
+            <i class="fas fa-terminal"></i><span>Logs</span>
+          </div>
+          <div class="nav-item" data-section="hittedSites">
+            <i class="fas fa-bolt"></i><span>Hits</span>
+          </div>
+        </div>
+        <div class="nav-status">
+          <div class="matrix-badge ready" id="status-badge">
+            <span id="samurai-status-dot" class="status-dot"></span>
+            <span id="samurai-status-text">Online</span>
+          </div>
+          <div class="power-btn" id="clearBtn" title="System Reset">
+            <i class="fas fa-power-off"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="main-view">
+      <div class="view-content-wrapper">
+        <div class="view-header">
+          <button id="mobileMenuBtn" class="mobile-menu-btn">
+             <i class="fas fa-bars"></i>
+          </button>
+          <div>
+            <h1 id="active-title">Overview</h1>
+            <p class="view-subtitle">System Status & Controls</p>
+          </div>
+        </div>
+        <div class="section active" id="telegram-section">
+          <div class="glass-card" style="padding: 32px 24px; text-align: center; border-style: dashed">
+            <i class="fas fa-shield-check" style="font-size: 40px; color: var(--success); margin-bottom: 16px;"></i>
+            <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 8px">System Ready & Operational</h2>
+            <p style="color: var(--text-dim); font-size: 14px">The extension is listening for payment gateways in the background.</p>
+          </div>
+          <div class="dashboard-stats">
+            <div class="stat-box">
+              <div class="stat-icon"><i class="fas fa-power-off"></i></div>
+              <div class="stat-info">
+                <span class="stat-label">Extension Status</span><span class="stat-value" id="dash-status-val">Active</span>
+              </div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-icon"><i class="fas fa-random"></i></div>
+              <div class="stat-info">
+                <span class="stat-label">Hitter Mode</span><span class="stat-value" id="dash-mode-val">BIN Mode</span>
+              </div>
+            </div>
+            <div class="stat-box" style="border-color: rgba(16, 185, 129, 0.2)">
+              <div class="stat-icon" style="color: var(--success); border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.1);">
+                <i class="fas fa-trophy"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">All-Time Successes</span><span class="stat-value success-text" id="dash-hits-val">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="section" id="settings-section">
+          <div class="glass-card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-sliders-h"></i>Configuration</h2>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border-color);">
+              <div>
+                <h4 style="font-size: 14px; font-weight: 500; margin-bottom: 4px; color: var(--text-main);">Master Switch</h4>
+                <p style="font-size: 13px; color: var(--text-dim)">Enable or disable the extension globally.</p>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="extensionToggle" checked /><span class="toggle-slider"></span></label>
+            </div>
+            <div class="form-grid">
+              <div class="form-group" style="background: rgba(255, 255, 255, 0.02); padding: 16px; border-radius: 8px; border: 1px solid var(--border-light);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+                  <span class="matrix-badge">Proxy Chain</span>
+                  <div style="display: flex; gap: 12px; align-items: center;">
+                    <button class="btn btn-secondary" id="checkProxiesBtn" style="padding: 6px 12px; font-size: 11px;">
+                        <i class="fas fa-network-wired"></i> Check Proxies
+                    </button>
+                    <label class="toggle-switch"><input type="checkbox" id="proxyToggle" /><span class="toggle-slider"></span></label>
+                  </div>
+                </div>
+                <textarea id="proxyList" class="form-textarea" rows="3" placeholder="host:port:user:pass" style="min-height: 60px"></textarea>
+                <div id="proxyCount" style="font-size: 12px; margin-top: 8px; color: var(--text-dim);">0 proxies</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="section" id="cards-section">
+          <div class="glass-card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-database"></i>Target Database (Cards & BINs)</h2>
+              <button class="btn btn-secondary" id="cleanCardsBtn">Format Data</button>
+            </div>
+            <textarea id="cardDetails" class="form-textarea panel-tall" style="color: var(--text-main)" placeholder="Mix BINs and Full Cards here!&#10;414720&#10;512345|12/28&#10;4111111111111111|01|2026|123"></textarea>
+          </div>
+        </div>
+        <div class="section" id="userDetails-section">
+          <div class="glass-card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-user-tag"></i>Billing Identity</h2>
+              <label class="toggle-switch"><input type="checkbox" id="useCustomBilling" /><span class="toggle-slider"></span></label>
+            </div>
+            <div class="form-grid">
+              <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="userName" placeholder="John Doe" /></div>
+              <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="userEmail" placeholder="mail@example.com" /></div>
+            </div>
+            <div class="form-group"><label class="form-label">Address</label><input type="text" class="form-input" id="userAddress" placeholder="123 Main Street" /></div>
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr">
+              <div class="form-group"><label class="form-label">City</label><input type="text" class="form-input" id="userCity" placeholder="New York" /></div>
+              <div class="form-group"><label class="form-label">Zip Code</label><input type="text" class="form-input" id="userZip" placeholder="10001" /></div>
+              <div class="form-group">
+                <label class="form-label">Country</label>
+                <select id="customCountry" class="clean-select">
+                  <option value="US">United States</option>
+                  <option value="GB">United Kingdom</option>
+                  <option value="CA">Canada</option>
+                  <option value="AU">Australia</option>
+                  <option value="DE">Germany</option>
+                  <option value="FR">France</option>
+                  <option value="AQ">Antarctica</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="section" id="console-section">
+          <div class="glass-card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-terminal"></i>System Kernel</h2>
+              <button class="btn btn-secondary" id="clearLogsBtn">Clear Console</button>
+            </div>
+            <div id="consoleOutput" class="panel-tall"></div>
+          </div>
+        </div>
+        <div class="section" id="hittedSites-section">
+          <div class="glass-card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-bolt"></i>Successful Operations</h2>
+              <div style="display: flex; align-items: center; gap: 12px">
+                <span style="font-size: 13px; color: var(--text-main); font-weight: 500;">Experimental Forward to Telegram</span>
+                <label class="toggle-switch"><input type="checkbox" id="sendSiteToggle" /><span class="toggle-slider"></span></label>
+              </div>
+            </div>
+            <div id="telegramWarningMsg" style="display: none; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); color: #fca5a5; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; align-items: center; gap: 10px;">
+                <i class="fas fa-exclamation-circle" style="font-size: 16px; color: var(--danger);"></i>
+                <span><strong>Notice:</strong> You are currently in Local Mode. <strong>Connect Telegram</strong> in the sidebar to receive live hit notifications directly to your private bot.</span>
+            </div>
+            <div id="hittedSitesList" style="min-height: 200px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="text-align: center; color: var(--text-dim); padding-top: 40px; font-size: 14px;">No successes recorded yet.</div>
+            </div>
+            <button id="clearHitsBtn" class="btn btn-secondary" style="width: 100%; margin-top: 24px; color: var(--danger); border-color: rgba(239, 68, 68, 0.2);">Purge Database</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="toast-container"></div>
+    <script src="dashboard.js"></script>
+  </body>
+</html>
