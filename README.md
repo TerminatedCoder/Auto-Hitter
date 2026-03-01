@@ -66,7 +66,7 @@ Because this is a developer tool, it is not hosted on the Chrome Web Store. You 
 
 1. **Download the Source Code:** Clone this repository or download it as a `.zip` file and extract it.
    ```bash
-   git clone https://github.com/TerminatedCoder/Auto-Hitter/
+   git clone https://github.com/TerminatedCoder/Auto-Hitter.git
    ```
 3. **Open Extension Settings:** Open Google Chrome and navigate to `chrome://extensions/`.
 4. **Enable Developer Mode:** Toggle the **"Developer mode"** switch in the top right corner.
